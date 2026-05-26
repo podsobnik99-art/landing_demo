@@ -1,188 +1,871 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="pl">
 <head>
-  <meta charset="utf-8">
-  <title>Manevision â AI dla kliniki kosmetologicznej</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #FBF4E8; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-    #__bundler_loading { position: fixed; bottom: 20px; right: 20px; font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif; color: #666; background: #fff; padding: 8px 14px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); z-index: 10000; }
-    #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #FBF4E8; z-index: 9999; }
-    #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
-    #__bundler_placeholder { color: #999; font-size: 14px; }
-  </style>
-  <noscript>
-    <style>#__bundler_loading { display: none; }</style>
-    <div style="position:fixed;bottom:12px;left:12px;font:13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;color:#999;background:rgba(255,255,255,0.9);padding:6px 12px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.08);z-index:10000;">
-      This page requires JavaScript to display.
-    </div>
-  </noscript>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manevision — AI dla kliniki kosmetologicznej</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;400i;500i&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* warm + bright palette */
+    --bg:        #FBF4E8;   /* warm cream */
+    --bg-soft:   #F5E6D3;   /* peach */
+    --card:      #FFFFFF;
+    --ink:       #2A1810;   /* warm brown-black */
+    --ink-2:     #6B5544;
+    --muted:     #9C8A78;
+    --terra:     #D2664A;   /* terracotta — primary CTA */
+    --terra-d:   #B85638;   /* hover */
+    --rose:      #E89B8E;
+    --gold:      #B08D57;
+    --border:    #ECDFCE;
+
+    --serif:     "Playfair Display", Georgia, serif;
+    --sans:      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --mono:      ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --maxw:      1140px;
+    --pad-y:     120px;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--terra);color:#fff}
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 32px;
+    position:relative;
+  }
+
+  /* ───────── Top bar ───────── */
+  .topbar{
+    position:absolute;
+    inset:32px 0 auto 0;
+    z-index:10;
+  }
+  .topbar .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .wordmark{
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:0.18em;
+    color:var(--gold);
+    text-transform:uppercase;
+  }
+  .lang{
+    display:flex;
+    gap:18px;
+    font-size:13px;
+    letter-spacing:0.06em;
+    color:var(--ink-2);
+  }
+  .lang button{
+    background:none;border:0;padding:2px 0;
+    font:inherit;color:inherit;cursor:pointer;
+    letter-spacing:inherit;
+    text-transform:uppercase;
+  }
+  .lang button.is-active{
+    color:var(--ink);
+    font-weight:600;
+    border-bottom:1.5px solid var(--terra);
+  }
+  .lang button:hover{color:var(--ink)}
+
+  /* ───────── Hero ───────── */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding:160px 0 100px;
+    overflow:hidden;
+    /* warm radial wash */
+    background:
+      radial-gradient(900px 600px at 85% 20%, rgba(232,155,142,.30), transparent 60%),
+      radial-gradient(700px 500px at 10% 90%, rgba(212,160,79,.22), transparent 60%),
+      var(--bg);
+  }
+
+  /* Background chat — fragments of correspondence */
+  .bg-chat{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:1;
+  }
+  .bg-bubble{
+    position:absolute;
+    max-width:280px;
+    padding:12px 16px;
+    font-size:14px;
+    line-height:1.45;
+    border-radius:20px;
+    color:#fff;
+    opacity:.42;
+    transform-origin:center;
+    box-sizing:border-box;
+  }
+  .bg-bubble.bot{
+    background:#fff;
+    color:var(--ink);
+    border:1px solid var(--border);
+    opacity:.55;
+    border-bottom-left-radius:6px;
+  }
+  .bg-bubble.cli{
+    background:linear-gradient(135deg, #F58EA7 0%, #C66EE0 50%, #8E5BE0 100%);
+    border-bottom-right-radius:6px;
+  }
+
+  /* positions: scattered like a real chat scroll, top-right + bottom-left */
+  .b1{ top:14%;  right:-40px; transform:rotate(4deg);  max-width:240px; }
+  .b2{ top:26%;  right:12%;   transform:rotate(-3deg); max-width:300px; }
+  .b3{ top:42%;  right:-20px; transform:rotate(2deg);  max-width:220px; }
+  .b4{ bottom:18%; left:-30px; transform:rotate(-4deg); max-width:230px; }
+  .b5{ bottom:6%;  left:14%;   transform:rotate(3deg);  max-width:280px; }
+  .b6{ top:60%;   left:8%;    transform:rotate(-2deg); max-width:200px; }
+
+  /* warm wash overlay so text reads crisp */
+  .hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(95deg, rgba(251,244,232,.96) 0%, rgba(251,244,232,.7) 40%, rgba(251,244,232,.2) 75%, rgba(251,244,232,0) 100%);
+    z-index:2;
+    pointer-events:none;
+  }
+  .hero-inner{
+    position:relative;
+    z-index:3;
+    max-width:720px;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 14px 7px 10px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:999px;
+    font-size:12px;
+    font-weight:500;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-2);
+    margin-bottom:28px;
+  }
+  .live-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:#2DD36F;
+    box-shadow:0 0 0 0 rgba(45,211,111,.6);
+    animation:pulse 1.8s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(45,211,111,.55)}
+    70%{box-shadow:0 0 0 8px rgba(45,211,111,0)}
+    100%{box-shadow:0 0 0 0 rgba(45,211,111,0)}
+  }
+
+  h1.hero-h{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:64px;
+    line-height:1.08;
+    letter-spacing:-0.015em;
+    margin:0 0 28px;
+    color:var(--ink);
+    text-wrap:balance;
+  }
+  h1.hero-h em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--terra);
+  }
+  .hero-sub{
+    font-size:20px;
+    line-height:1.55;
+    color:var(--ink-2);
+    max-width:560px;
+    margin:0 0 40px;
+  }
+  .micro{
+    font-size:14px;
+    color:var(--muted);
+    margin:18px 0 0;
+  }
+
+  /* ───────── CTA button ───────── */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    background:var(--terra);
+    color:#fff;
+    font-family:var(--sans);
+    font-size:18px;
+    font-weight:500;
+    letter-spacing:0.04em;
+    padding:20px 36px;
+    border-radius:10px;
+    border:0;
+    cursor:pointer;
+    transition:transform .18s ease, background .18s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{
+    transform:translateY(-2px);
+    background:var(--terra-d);
+  }
+  .btn .arrow{
+    display:inline-block;
+    transition:transform .18s ease;
+  }
+  .btn:hover .arrow{transform:translateX(4px)}
+
+  /* ───────── Hero CTA row with QR ───────── */
+  .cta-row{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  .qr-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px 18px 12px 12px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    cursor:zoom-in;
+    transition:transform .18s ease, border-color .18s ease;
+  }
+  .qr-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--rose);
+  }
+  .qr-card img{
+    width:64px;height:64px;display:block;
+    border-radius:6px;
+  }
+  .qr-label{
+    font-size:13px;
+    line-height:1.35;
+    color:var(--ink-2);
+  }
+  .qr-label strong{
+    display:block;
+    color:var(--ink);
+    font-weight:600;
+    font-size:14px;
+    margin-bottom:2px;
+  }
+
+  /* ───────── QR lightbox modal ───────── */
+  .qr-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(42,24,16,.78);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:24px;
+    cursor:zoom-out;
+    animation:fadeIn .2s ease;
+  }
+  .qr-modal.is-open{display:flex}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .qr-modal-inner{
+    background:#fff;
+    border-radius:20px;
+    padding:32px 32px 28px;
+    max-width:420px;
+    width:100%;
+    text-align:center;
+    cursor:default;
+    animation:popIn .25s cubic-bezier(.2,.9,.3,1.1);
+  }
+  @keyframes popIn{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+  .qr-modal-inner img{
+    width:100%;
+    max-width:340px;
+    height:auto;
+    display:block;
+    margin:0 auto 18px;
+    border-radius:8px;
+  }
+  .qr-modal-inner h4{
+    font-family:var(--serif);
+    font-weight:500;
+    font-size:22px;
+    margin:0 0 6px;
+    color:var(--ink);
+  }
+  .qr-modal-inner p{
+    font-size:14px;
+    color:var(--ink-2);
+    margin:0 0 18px;
+  }
+  .qr-modal-inner .url{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--muted);
+    word-break:break-all;
+  }
+  .qr-close{
+    position:absolute;
+    top:18px;right:22px;
+    background:none;border:0;
+    color:#fff;
+    font-size:32px;
+    line-height:1;
+    cursor:pointer;
+    padding:8px;
+    opacity:.8;
+  }
+  .qr-close:hover{opacity:1}
+
+  /* ───────── Sections ───────── */
+  section{padding:var(--pad-y) 0}
+  .sec{position:relative}
+  .sec-h{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:44px;
+    line-height:1.15;
+    text-align:center;
+    margin:0 0 16px;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+  .sec-h em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--terra);
+  }
+  .sec-sub{
+    text-align:center;
+    font-size:17px;
+    color:var(--ink-2);
+    max-width:560px;
+    margin:0 auto 64px;
+    line-height:1.55;
+  }
+
+  /* ───────── Benefits grid ───────── */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:14px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:30px 26px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    transition:transform .25s ease, border-color .25s ease;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    border-color:var(--rose);
+  }
+  .card .icon-wrap{
+    width:44px;height:44px;
+    border-radius:12px;
+    background:var(--bg-soft);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--terra);
+  }
+  .card .icon-wrap svg{width:22px;height:22px;display:block}
+  .card h3{
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:17px;
+    line-height:1.3;
+    margin:0;
+    color:var(--ink);
+  }
+  .card p{
+    font-size:14.5px;
+    line-height:1.6;
+    color:var(--ink-2);
+    margin:0;
+  }
+
+  /* ───────── Chat mock (Section 3) ───────── */
+  .chat-wrap{
+    position:relative;
+    max-width:440px;
+    margin:0 auto;
+  }
+  /* warm halo behind the phone */
+  .chat-wrap::before{
+    content:"";
+    position:absolute;
+    inset:-40px -60px;
+    background:radial-gradient(closest-side, rgba(232,155,142,.35), transparent 70%);
+    z-index:0;
+    border-radius:50%;
+  }
+  .chat{
+    position:relative;
+    z-index:1;
+    background:#FAFAFA;
+    border-radius:28px;
+    overflow:hidden;
+    border:1px solid var(--border);
+  }
+  .chat-head{
+    display:flex;align-items:center;gap:12px;
+    padding:16px 18px;
+    background:#fff;
+    border-bottom:1px solid #ECECEC;
+  }
+  .avatar{
+    width:38px;height:38px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #E8C898 0%, #B08D57 55%, #7E5F33 100%);
+    flex-shrink:0;
+  }
+  .chat-name{
+    font-size:14px;font-weight:600;color:var(--ink);
+    line-height:1.2;
+  }
+  .chat-status{
+    display:flex;align-items:center;gap:6px;
+    font-size:12px;color:var(--muted);
+    margin-top:2px;
+  }
+  .dot-active{
+    width:7px;height:7px;border-radius:50%;
+    background:#2DD36F;
+    display:inline-block;
+  }
+  .chat-body{
+    padding:18px 14px 22px;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .msg{
+    max-width:80%;
+    padding:10px 14px;
+    font-size:14px;
+    line-height:1.45;
+    border-radius:18px;
+    word-wrap:break-word;
+  }
+  .msg.bot{
+    align-self:flex-start;
+    background:#fff;
+    color:var(--ink);
+    border:1px solid #EFEFEF;
+    border-bottom-left-radius:6px;
+  }
+  .msg.client{
+    align-self:flex-end;
+    background:linear-gradient(135deg, #F58EA7 0%, #C66EE0 50%, #8E5BE0 100%);
+    color:#fff;
+    border-bottom-right-radius:6px;
+  }
+
+  .final-cta{
+    text-align:center;
+    margin-top:72px;
+  }
+  .final-cta .reassure{
+    display:block;
+    margin-top:14px;
+    font-size:14px;
+    color:var(--muted);
+  }
+
+  /* ───────── Footer ───────── */
+  footer{
+    border-top:1px solid var(--border);
+  }
+  .foot{
+    display:flex;align-items:center;justify-content:space-between;
+    min-height:60px;
+    padding:18px 32px;
+    max-width:var(--maxw);
+    margin:0 auto;
+    font-size:14px;
+    color:var(--ink-2);
+  }
+  .foot .brand{
+    font-family:var(--serif);
+    font-size:17px;
+    color:var(--ink);
+    letter-spacing:0.01em;
+  }
+
+  /* ───────── Responsive ───────── */
+  @media (max-width: 900px){
+    :root{--pad-y:72px}
+    .topbar{inset:20px 0 auto 0}
+    .wrap{padding:0 20px}
+    .hero{padding:120px 0 64px; min-height:auto}
+    h1.hero-h{font-size:40px}
+    .hero-sub{font-size:17px;margin-bottom:32px}
+    .sec-h{font-size:30px}
+    .sec-sub{font-size:15px;margin-bottom:40px}
+    .grid{grid-template-columns:1fr;gap:12px}
+    .card{padding:24px}
+    .btn{font-size:16px;padding:18px 30px}
+    .chat-wrap{max-width:100%}
+    .foot{flex-direction:column;gap:8px;text-align:center;padding:20px}
+    .final-cta{margin-top:56px}
+    /* hide some background bubbles on mobile to keep it light */
+    .b3,.b6{display:none}
+    .bg-bubble{max-width:200px;font-size:12.5px}
+    .b1{top:8%;right:-30px;max-width:170px}
+    .b2{top:18%;right:8%;max-width:180px}
+    .b4{bottom:14%;left:-20px;max-width:170px}
+    .b5{bottom:4%;left:8%;max-width:190px}
+  }
+</style>
 </head>
 <body>
-  <div id="__bundler_thumbnail">
-  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
-    <rect width="1200" height="800" fill="#FBF4E8"></rect>
-    <circle cx="950" cy="220" r="260" fill="#E89B8E" opacity="0.45"></circle>
-    <circle cx="240" cy="630" r="200" fill="#B08D57" opacity="0.25"></circle>
-    <g transform="translate(420 280)">
-      <rect x="0" y="0" width="360" height="120" rx="60" fill="#FFFFFF" stroke="#ECDFCE" stroke-width="2"></rect>
-      <rect x="0" y="100" width="40" height="22" rx="6" fill="#FFFFFF" stroke="#ECDFCE" stroke-width="2"></rect>
-      <circle cx="120" cy="60" r="8" fill="#D2664A"></circle>
-      <circle cx="180" cy="60" r="8" fill="#D2664A"></circle>
-      <circle cx="240" cy="60" r="8" fill="#D2664A"></circle>
-    </g>
-    <text x="600" y="540" font-family="Georgia, serif" font-size="44" font-style="italic" fill="#2A1810" text-anchor="middle">Manevision</text>
-  </svg>
-</div>
-  <div id="__bundler_loading">Unpacking...</div>
 
-  <script>
-    
-document.addEventListener('DOMContentLoaded', async function() {
-  const loading = document.getElementById('__bundler_loading');
-  function setStatus(msg) { if (loading) loading.textContent = msg; }
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="wrap">
+      <div class="wordmark">MANEVISION</div>
+      <nav class="lang" aria-label="Language">
+        <button data-lang="pl" class="is-active">PL</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="ru">RU</button>
+      </nav>
+    </div>
+  </div>
 
-  // Error sink persists across replaceWith since it's on window, not the DOM.
-  window.addEventListener('error', function(e) {
-    var p = document.body || document.documentElement;
-    var d = document.getElementById('__bundler_err') || p.appendChild(document.createElement('div'));
-    d.id = '__bundler_err';
-    d.style.cssText = 'position:fixed;bottom:12px;left:12px;right:12px;font:12px/1.4 ui-monospace,monospace;background:#2a1215;color:#ff8a80;padding:10px 14px;border-radius:8px;border:1px solid #5c2b2e;z-index:99999;white-space:pre-wrap;max-height:40vh;overflow:auto';
-    d.textContent = (d.textContent ? d.textContent + String.fromCharCode(10) : '') +
-      '[bundle] ' + (e.message || e.type) +
-      (e.filename ? ' (' + e.filename.slice(0, 60) + ':' + e.lineno + ')' : '');
-  }, true);
+  <!-- ───────── Hero ───────── -->
+  <section class="hero">
 
-  try {
-    const manifestEl = document.querySelector('script[type="__bundler/manifest"]');
-    const templateEl = document.querySelector('script[type="__bundler/template"]');
-    if (!manifestEl || !templateEl) {
-      setStatus('Error: missing bundle data');
-      console.error('[bundler] Missing script tags â manifestEl:', !!manifestEl, 'templateEl:', !!templateEl);
-      return;
+    <!-- Decorative chat fragments in the background -->
+    <div class="bg-chat" aria-hidden="true">
+      <div class="bg-bubble cli b1" data-i18n="bg1"></div>
+      <div class="bg-bubble bot b2" data-i18n="bg2"></div>
+      <div class="bg-bubble cli b3" data-i18n="bg3"></div>
+      <div class="bg-bubble bot b4" data-i18n="bg4"></div>
+      <div class="bg-bubble cli b5" data-i18n="bg5"></div>
+      <div class="bg-bubble bot b6" data-i18n="bg6"></div>
+    </div>
+
+    <div class="wrap">
+      <div class="hero-inner">
+        <span class="eyebrow"><span class="live-dot"></span><span data-i18n="eyebrow"></span></span>
+        <h1 class="hero-h" data-i18n="hero_h"></h1>
+        <p class="hero-sub" data-i18n="hero_sub">Ваша клиника отвечает за 10 секунд. В любое время. В любом мессенджере или соцсети.</p>
+        <div class="cta-row">
+          <a class="btn" href="https://ig.me/m/manebotdemo_beauty" target="_blank" rel="noopener noreferrer">
+            <span data-i18n="cta_hero"></span><span class="arrow">→</span>
+          </a>
+          <button class="qr-card" type="button" id="qrTrigger" aria-label="Show QR code">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=2&data=https%3A%2F%2Fig.me%2Fm%2Fmanebotdemo_beauty" alt="QR code to ig.me/m/manebotdemo_beauty">
+            <span class="qr-label">
+              <strong data-i18n="qr_title"></strong>
+              <span data-i18n="qr_sub"></span>
+            </span>
+          </button>
+        </div>
+        <p class="micro" data-i18n="micro"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── Benefits ───────── -->
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h" data-i18n="sec_benefits"></h2>
+      <p class="sec-sub" data-i18n="sec_benefits_sub"></p>
+      <div class="grid">
+
+        <article class="card">
+          <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+          <h3 data-i18n="c1h"></h3>
+          <p data-i18n="c1b"></p>
+        </article>
+
+        <article class="card">
+          <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+          <h3 data-i18n="c2h"></h3>
+          <p data-i18n="c2b"></p>
+        </article>
+
+        <article class="card">
+          <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span>
+          <h3 data-i18n="c3h"></h3>
+          <p data-i18n="c3b"></p>
+        </article>
+
+        <article class="card">
+          <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg></span>
+          <h3 data-i18n="c4h"></h3>
+          <p data-i18n="c4b"></p>
+        </article>
+
+        <article class="card">
+          <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
+          <h3 data-i18n="c5h"></h3>
+          <p data-i18n="c5b"></p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── Live dialogue + final CTA ───────── -->
+  <section class="sec" style="background:linear-gradient(180deg, transparent, rgba(245,230,211,.4) 40%, transparent);">
+    <div class="wrap">
+      <h2 class="sec-h" data-i18n="sec_chat"></h2>
+      <p class="sec-sub" data-i18n="sec_chat_sub"></p>
+
+      <div class="chat-wrap">
+        <div class="chat" role="img" aria-label="Instagram chat preview">
+          <div class="chat-head">
+            <div class="avatar" aria-hidden="true"></div>
+            <div>
+              <div class="chat-name">@manebotdemo_beauty</div>
+              <div class="chat-status"><span class="dot-active"></span><span data-i18n="active_now"></span></div>
+            </div>
+          </div>
+          <div class="chat-body">
+            <div class="msg client" data-i18n="m1"></div>
+            <div class="msg bot"    data-i18n="m2"></div>
+            <div class="msg client" data-i18n="m3"></div>
+            <div class="msg bot"    data-i18n="m4"></div>
+            <div class="msg client" data-i18n="m5"></div>
+            <div class="msg bot"    data-i18n="m6"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="final-cta">
+        <a class="btn" href="https://ig.me/m/manebotdemo_beauty" target="_blank" rel="noopener noreferrer">
+          <span data-i18n="cta_final"></span><span class="arrow">→</span>
+        </a>
+        <span class="reassure" data-i18n="reassure"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── QR Lightbox ───────── -->
+  <div class="qr-modal" id="qrModal" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+    <button class="qr-close" id="qrClose" aria-label="Close">×</button>
+    <div class="qr-modal-inner">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=680x680&margin=2&data=https%3A%2F%2Fig.me%2Fm%2Fmanebotdemo_beauty" alt="QR code — large">
+      <h4 id="qrModalTitle" data-i18n="qr_modal_h"></h4>
+      <p data-i18n="qr_modal_p"></p>
+      <div class="url">ig.me/m/manebotdemo_beauty</div>
+    </div>
+  </div>
+
+  <!-- ───────── Footer ───────── -->
+  <footer>
+    <div class="foot">
+      <div class="brand">Manevision</div>
+      <div><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e58a83838c8680a588848b80878a91cb868a88">[email&#160;protected]</a>&nbsp;&nbsp;·&nbsp;&nbsp;+48 732 228 810</div>
+    </div>
+  </footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const i18n = {
+    pl: {
+      eyebrow:   "Demo live · Instagram",
+      hero_h:    "Każda nieodebrana wiadomość — to klientka, <em>która nie wróci.</em>",
+      hero_sub:  "Wasza klinika odpowiada w 10 sekund. O każdej porze. W aplikacji, w której klientka i tak już scrolluje.",
+      cta_hero:  "Napisz do bota teraz",
+      micro:     "2 minuty. Bez rejestracji. Pisz, co chcesz.",
+      qr_title:  "Zeskanuj",
+      qr_sub:    "i napisz do bota",
+      qr_modal_h:"Zeskanuj telefonem",
+      qr_modal_p:"Aparat otworzy czat z botem w Instagramie.",
+
+      sec_benefits:     "Co rozwiązuje",
+      sec_benefits_sub: "Pięć rzeczy, które codziennie kosztują was klientki — i jak bot z nimi kończy.",
+      c1h: "Koniec z ciszą o 23:00",
+      c1b: "Pyta o cenę w nocy. Dostaje odpowiedź w 10 sekund. Rezerwuje — zanim konkurencja w ogóle się obudzi.",
+      c2h: "Cennik zawsze pod ręką",
+      c2b: "35+ zabiegów, promocje, pakiety. Klientka dostaje aktualną cenę — nie „około”.",
+      c3h: "Chroni przed ryzykiem",
+      c3b: "Pyta o ciążę, leki, alergie zanim w ogóle zaproponuje termin. Wasza recepcja śpi spokojnie.",
+      c4h: "Rezerwuje, gdy macie pełen grafik",
+      c4b: "Wy robicie zabieg. Ona w tym czasie wybiera slot. Bez oddzwaniania, bez pingponga.",
+      c5h: "Tam, gdzie klientka już jest",
+      c5b: "Instagram, WhatsApp, strona. Bez aplikacji do pobrania, bez konta do założenia.",
+
+      sec_chat:     "Tak <em>rozmawia</em> z klientką",
+      sec_chat_sub: "Prawdziwy fragment z dema. Po polsku, naturalnie, bez „jak mogę pomóc”.",
+      active_now: "Aktywny teraz",
+      m1: "cześć, ile kosztuje botoks?",
+      m2: "Botoks 1 strefa — 350 zł, 2 strefy — 550 zł. Chcesz zapisać się czy najpierw porozmawiamy o procedurze?",
+      m3: "a w ciąży można?",
+      m4: "W ciąży botoksu nie robimy — to bezpieczne dla mamy i dziecka. Mogę zaproponować coś łagodniejszego, np. zabiegi nawilżające?",
+      m5: "jakie macie wolne sloty w piątek?",
+      m6: "Piątek: 14:00, 16:30, 18:00. Który rezerwujemy?",
+      cta_final: "Spróbuj sama na Instagram",
+      reassure:  "Bot odpisuje od razu. Nie czekacie na nic.",
+
+      bg1: "ile kosztuje botoks?",
+      bg2: "Botoks 1 strefa — 350 zł, 2 strefy — 550 zł.",
+      bg3: "a w ciąży można?",
+      bg4: "W ciąży nie robimy — to nasza zasada bezpieczeństwa.",
+      bg5: "jakie sloty w piątek?",
+      bg6: "Piątek: 14:00, 16:30, 18:00."
+    },
+    en: {
+      eyebrow:   "Live demo · Instagram",
+      hero_h:    "Every missed DM is a client <em>who won't come back.</em>",
+      hero_sub:  "Your clinic replies in 10 seconds. Any hour. Right inside the app she's already scrolling.",
+      cta_hero:  "Message the bot now",
+      micro:     "2 minutes. No signup. Ask anything.",
+      qr_title:  "Scan",
+      qr_sub:    "to message the bot",
+      qr_modal_h:"Scan with your phone",
+      qr_modal_p:"Your camera will open the chat with the bot on Instagram.",
+
+      sec_benefits:     "What it actually fixes",
+      sec_benefits_sub: "Five things quietly costing you clients every day — and how the bot ends them.",
+      c1h: "No more midnight silence",
+      c1b: "She asks about price at 11 PM. Gets a reply in 10 seconds. Books — before your competitor wakes up.",
+      c2h: "The right price, every time",
+      c2b: "35+ services, promos, packages. She gets the exact number — never \"around\" or \"I'll check\".",
+      c3h: "Catches risky bookings",
+      c3b: "Asks about pregnancy, meds, allergies before offering a slot. Your front desk sleeps easy.",
+      c4h: "Books while you're with another client",
+      c4b: "You're doing a treatment. She's picking a time. No callbacks, no phone tag.",
+      c5h: "Where she already is",
+      c5b: "Instagram, WhatsApp, your site. No app to download, no account to create.",
+
+      sec_chat:     "How it <em>actually</em> talks",
+      sec_chat_sub: "Real cut from the demo. Natural — none of that \"how may I assist you\" energy.",
+      active_now: "Active now",
+      m1: "hi, how much is botox?",
+      m2: "Botox 1 zone — 350 zł, 2 zones — 550 zł. Want to book or talk through the procedure first?",
+      m3: "can I get it while pregnant?",
+      m4: "We don't do botox during pregnancy — that's our safety rule for mom and baby. I can suggest something gentler, like hydration treatments?",
+      m5: "any free slots on Friday?",
+      m6: "Friday: 2 PM, 4:30 PM, 6 PM. Which one do we book?",
+      cta_final: "Try it yourself on Instagram",
+      reassure:  "Bot replies instantly. You're not waiting on anything.",
+
+      bg1: "hi, how much is botox?",
+      bg2: "1 zone — 350 zł, 2 zones — 550 zł.",
+      bg3: "can I get it while pregnant?",
+      bg4: "We don't during pregnancy — safety rule.",
+      bg5: "free slots Friday?",
+      bg6: "Friday: 2 PM, 4:30 PM, 6 PM."
+    },
+    ru: {
+      eyebrow:   "Демо в эфире · Instagram",
+      hero_h:    "Каждое пропущенное сообщение — клиент, <em>который не вернётся.</em>",
+      hero_sub:  "Ваша клиника отвечает за 10 секунд. В любое время. Прямо в той аппе, где клиентка и так листает.",
+      cta_hero:  "Написать боту сейчас",
+      micro:     "2 минуты. Без регистрации. Спрашивайте что угодно.",
+      qr_title:  "Сканируй",
+      qr_sub:    "и напиши боту",
+      qr_modal_h:"Отсканируй телефоном",
+      qr_modal_p:"Камера откроет чат с ботом в Instagram.",
+
+      sec_benefits:     "Что решает",
+      sec_benefits_sub: "Пять вещей, которые тихо стоят вам клиентов каждый день — и как бот это закрывает.",
+      c1h: "Конец тишине в 23:00",
+      c1b: "Спрашивает цену ночью. Получает ответ за 10 секунд. Записывается — пока конкуренты ещё спят.",
+      c2h: "Цены — точные, не «примерно»",
+      c2b: "35+ процедур, акции, пакеты. Клиент получает точную цифру — без «уточню и перезвоню».",
+      c3h: "Останавливает риск до записи",
+      c3b: "Спрашивает про беременность, лекарства, аллергии — до того, как предложить слот.",
+      c4h: "Записывает, пока вы работаете",
+      c4b: "Вы — на процедуре. Она — выбирает время. Без перезвонов и переписок туда-сюда.",
+      c5h: "Там, где клиент уже сидит",
+      c5b: "Instagram, WhatsApp, сайт. Ничего не качать, нигде не регистрироваться.",
+
+      sec_chat:     "Вот как он <em>реально</em> общается",
+      sec_chat_sub: "Живой кусок из демо. Естественно — без «чем могу быть полезен».",
+      active_now: "В сети",
+      m1: "привет, сколько ботокс?",
+      m2: "Ботокс 1 зона — 350 zł, 2 зоны — 550 zł. Запишемся или сначала расскажу про процедуру?",
+      m3: "а при беременности можно?",
+      m4: "При беременности ботокс не делаем — это наше правило безопасности. Могу предложить что-то мягче, например увлажняющие процедуры?",
+      m5: "какие слоты в пятницу?",
+      m6: "Пятница: 14:00, 16:30, 18:00. Какой бронируем?",
+      cta_final: "Попробуй сам в Instagram",
+      reassure:  "Бот отвечает сразу. Ничего ждать не нужно.",
+
+      bg1: "сколько ботокс?",
+      bg2: "1 зона — 350 zł, 2 зоны — 550 zł.",
+      bg3: "а при беременности можно?",
+      bg4: "При беременности не делаем — правило безопасности.",
+      bg5: "слоты в пятницу?",
+      bg6: "Пятница: 14:00, 16:30, 18:00."
     }
+  };
 
-    const manifest = JSON.parse(manifestEl.textContent);
-    let template = JSON.parse(templateEl.textContent);
+  const htmlEl = document.documentElement;
+  const buttons = document.querySelectorAll('.lang button');
 
-    const uuids = Object.keys(manifest);
-    setStatus('Unpacking ' + uuids.length + ' assets...');
-
-    const blobUrls = {};
-    await Promise.all(uuids.map(async (uuid) => {
-      const entry = manifest[uuid];
-      try {
-        const binaryStr = atob(entry.data);
-        const bytes = new Uint8Array(binaryStr.length);
-        for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
-
-        let finalBytes = bytes;
-        if (entry.compressed) {
-          if (typeof DecompressionStream !== 'undefined') {
-            const ds = new DecompressionStream('gzip');
-            const writer = ds.writable.getWriter();
-            const reader = ds.readable.getReader();
-            writer.write(bytes);
-            writer.close();
-            const chunks = [];
-            let totalLen = 0;
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
-              chunks.push(value);
-              totalLen += value.length;
-            }
-            finalBytes = new Uint8Array(totalLen);
-            let offset = 0;
-            for (const chunk of chunks) { finalBytes.set(chunk, offset); offset += chunk.length; }
-          } else {
-            console.warn('DecompressionStream not available, asset ' + uuid + ' may not render');
-          }
-        }
-
-        blobUrls[uuid] = URL.createObjectURL(new Blob([finalBytes], { type: entry.mime }));
-      } catch (err) {
-        console.error('Failed to decode asset ' + uuid + ':', err);
-        blobUrls[uuid] = URL.createObjectURL(new Blob([], { type: entry.mime }));
-      }
-    }));
-
-    const extResEl = document.querySelector('script[type="__bundler/ext_resources"]');
-    const extResources = extResEl ? JSON.parse(extResEl.textContent) : [];
-    const resourceMap = {};
-    for (const entry of extResources) {
-      if (blobUrls[entry.uuid]) resourceMap[entry.id] = blobUrls[entry.uuid];
-    }
-
-    setStatus('Rendering...');
-    for (const uuid of uuids) template = template.split(uuid).join(blobUrls[uuid]);
-
-    // Strip integrity + crossorigin â blob URLs from a file:// document inherit
-    // a null origin, so crossorigin forces a CORS fetch that SRI then rejects.
-    // The manifest bytes are ours; SRI protects against CDN compromise, not this.
-    template = template.replace(/\s+integrity="[^"]*"/gi, '').replace(/\s+crossorigin="[^"]*"/gi, '');
-
-    const resourceScript = '<script>window.__resources = ' +
-      JSON.stringify(resourceMap).split('</' + 'script>').join('<\\/' + 'script>') +
-      ';</' + 'script>';
-    // Inject after <head> so the DOCTYPE stays first; prepending the script
-    // would push the parser into quirks mode. DOMParser always emits a <head>
-    // (synthesizing one if the source HTML omitted it) but may carry
-    // attributes through, so match the full opening tag. slice() rather than
-    // replace() keeps us clear of $-pattern substitution in resourceScript.
-    const headOpen = template.match(/<head[^>]*>/i);
-    if (headOpen) {
-      const i = headOpen.index + headOpen[0].length;
-      template = template.slice(0, i) + resourceScript + template.slice(i);
-    }
-
-    // Parse the template and swap the root element. Scripts inserted via
-    // DOMParser/replaceWith are inert per spec â re-create each with
-    // createElement so they execute, awaiting onload for src scripts to
-    // preserve ordering (React before ReactDOM before Babel before text/babel).
-    const doc = new DOMParser().parseFromString(template, 'text/html');
-    document.documentElement.replaceWith(doc.documentElement);
-    const dead = Array.from(document.scripts);
-    for (const old of dead) {
-      const s = document.createElement('script');
-      for (const a of old.attributes) s.setAttribute(a.name, a.value);
-      s.textContent = old.textContent;
-      // text/babel scripts with a src: fetch and inline. transformScriptTags
-      // does XHR against the src, but blob:null/ from a file:// origin is
-      // silently dropped. Inlining makes it a plain inline babel script,
-      // which transformScriptTags handles unconditionally.
-      if ((s.type === 'text/babel' || s.type === 'text/jsx') && s.src) {
-        const r = await fetch(s.src);
-        s.textContent = await r.text();
-        s.removeAttribute('src');
-      }
-      const p = s.src ? new Promise(function(r) { s.onload = s.onerror = r; }) : null;
-      old.replaceWith(s);
-      if (p) await p;
-    }
-    // Babel standalone auto-transforms type=text/babel on DOMContentLoaded,
-    // which fired before we swapped the document. Trigger manually if present.
-    if (window.Babel && typeof window.Babel.transformScriptTags === 'function') {
-      window.Babel.transformScriptTags();
-    }
-  } catch (err) {
-    setStatus('Error unpacking: ' + err.message);
-    console.error('Bundle unpack error:', err);
+  function setLang(lang){
+    if(!i18n[lang]) lang = 'pl';
+    const dict = i18n[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const k = el.getAttribute('data-i18n');
+      if(dict[k] !== undefined) el.innerHTML = dict[k]; // allow <em> in headings
+    });
+    buttons.forEach(b=>b.classList.toggle('is-active', b.dataset.lang===lang));
+    htmlEl.lang = lang;
+    try { localStorage.setItem('manevision_lang', lang); } catch(e){}
   }
-});
 
-  </script>
+  buttons.forEach(b=>b.addEventListener('click', ()=>setLang(b.dataset.lang)));
 
-  <script type="__bundler/manifest">
-{"113ac4c5-97e2-4ee2-b83f-885445013665":{"mime":"image/png","compressed":false,"data":"iVBORw0KGgoAAAANSUhEUgAAALQAAAC0AQMAAAAHA5RxAAAABlBMVEX///8qGBD/tJh1AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABdklEQVRYhc2Xu7HEIAxFxRAQUoJLoTNsd0YplEDowIP2SvLbnX0FrFBic0wg63MRxGKd4ijySNwUDPLiNxGlXqPuOCg3BY4880wd7+VOPTA3Bd5851Ei9/oHvHnQaPH538+FuOZ3x4rMvvL+e271j3or8drOK3/3xe+5mRSa8Ddw43BqJuY7Nywq2iAOuOvHIzhth+lVeNQLeVyPt/mlY2hXiacXv6nAz2k6RsItnl4cDoo+sNa/fCbd5cbxFi7aRRVo408evTiewQqK0pNA9XM1DpP8ouzQCYfMD4PwQ24ciTU/G86dqQE2/9043NpOtAFfmt8767HtxQGQwGoZnehHbKymD14cYUL9Qx+gVyJgPVwL8swq8DJ3ia7Kaufhxs0e3ZB46ic/bsq1qz7Iya3znmXbhdu8R6oPeq+hLFH04zoP1yj6gDawPFpdrchJdQNzYNFjaThzqTf+2NtPB052j1B9eOb205Fb/es94rkP6ri8Gn8BvGpeLj/so1kAAAAASUVORK5CYII="}}
-  </script>
+  let initial = 'pl';
+  try {
+    const stored = localStorage.getItem('manevision_lang');
+    if(stored && i18n[stored]) initial = stored;
+  } catch(e){}
+  setLang(initial);
 
-  <script type="__bundler/ext_resources">
-[]
-  </script>
-
-  <script type="__bundler/template">
-"<!DOCTYPE html>\n<html lang=\"pl\"><head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\n<title>Manevision â AI dla kliniki kosmetologicznej<\u002Ftitle>\n\n<style>\n  :root{\n    /* warm + bright palette */\n    --bg:        #FBF4E8;   /* warm cream */\n    --bg-soft:   #F5E6D3;   /* peach */\n    --card:      #FFFFFF;\n    --ink:       #2A1810;   /* warm brown-black */\n    --ink-2:     #6B5544;\n    --muted:     #9C8A78;\n    --terra:     #D2664A;   /* terracotta â primary CTA */\n    --terra-d:   #B85638;   /* hover */\n    --rose:      #E89B8E;\n    --gold:      #B08D57;\n    --border:    #ECDFCE;\n\n    --serif:     \"Playfair Display\", Georgia, serif;\n    --sans:      \"Inter\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n    --mono:      ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n    --maxw:      1140px;\n    --pad-y:     120px;\n  }\n\n  *,*::before,*::after{box-sizing:border-box}\n  html,body{margin:0;padding:0}\n  body{\n    background:var(--bg);\n    color:var(--ink);\n    font-family:var(--sans);\n    font-size:16px;\n    line-height:1.5;\n    -webkit-font-smoothing:antialiased;\n    text-rendering:optimizeLegibility;\n    overflow-x:hidden;\n  }\n  a{color:inherit;text-decoration:none}\n  ::selection{background:var(--terra);color:#fff}\n\n  .wrap{\n    max-width:var(--maxw);\n    margin:0 auto;\n    padding:0 32px;\n    position:relative;\n  }\n\n  /* âââââââââ Top bar âââââââââ */\n  .topbar{\n    position:absolute;\n    inset:32px 0 auto 0;\n    z-index:10;\n  }\n  .topbar .wrap{\n    display:flex;\n    align-items:center;\n    justify-content:space-between;\n  }\n  .wordmark{\n    font-family:var(--sans);\n    font-weight:600;\n    font-size:14px;\n    letter-spacing:0.18em;\n    color:var(--gold);\n    text-transform:uppercase;\n  }\n  .lang{\n    display:flex;\n    gap:18px;\n    font-size:13px;\n    letter-spacing:0.06em;\n    color:var(--ink-2);\n  }\n  .lang button{\n    background:none;border:0;padding:2px 0;\n    font:inherit;color:inherit;cursor:pointer;\n    letter-spacing:inherit;\n    text-transform:uppercase;\n  }\n  .lang button.is-active{\n    color:var(--ink);\n    font-weight:600;\n    border-bottom:1.5px solid var(--terra);\n  }\n  .lang button:hover{color:var(--ink)}\n\n  /* âââââââââ Hero âââââââââ */\n  .hero{\n    position:relative;\n    min-height:100vh;\n    display:flex;\n    align-items:center;\n    padding:160px 0 100px;\n    overflow:hidden;\n    /* warm radial wash */\n    background:\n      radial-gradient(900px 600px at 85% 20%, rgba(232,155,142,.30), transparent 60%),\n      radial-gradient(700px 500px at 10% 90%, rgba(212,160,79,.22), transparent 60%),\n      var(--bg);\n  }\n\n  /* Background chat â fragments of correspondence */\n  .bg-chat{\n    position:absolute;\n    inset:0;\n    pointer-events:none;\n    z-index:1;\n  }\n  .bg-bubble{\n    position:absolute;\n    max-width:280px;\n    padding:12px 16px;\n    font-size:14px;\n    line-height:1.45;\n    border-radius:20px;\n    color:#fff;\n    opacity:.24;\n    transform-origin:center;\n    box-sizing:border-box;\n    will-change:transform;\n  }\n  .bg-bubble.bot{\n    background:#fff;\n    color:var(--ink);\n    border:1px solid var(--border);\n    opacity:.28;\n    border-bottom-left-radius:6px;\n  }\n  .bg-bubble.cli{\n    background:linear-gradient(135deg, #F58EA7 0%, #C66EE0 50%, #8E5BE0 100%);\n    opacity:.22;\n    border-bottom-right-radius:6px;\n  }\n\n  /* Each bubble gets a base rotation/position via its own class,\n     plus a float animation wrapper inside (--r holds the rotation). */\n  @keyframes floatA {\n    0%,100%{ transform: rotate(var(--r,0deg)) translate3d(0,0,0); }\n    50%    { transform: rotate(var(--r,0deg)) translate3d(0,-14px,0); }\n  }\n  @keyframes floatB {\n    0%,100%{ transform: rotate(var(--r,0deg)) translate3d(0,0,0); }\n    50%    { transform: rotate(var(--r,0deg)) translate3d(8px,10px,0); }\n  }\n  @keyframes floatC {\n    0%,100%{ transform: rotate(var(--r,0deg)) translate3d(0,0,0); }\n    50%    { transform: rotate(var(--r,0deg)) translate3d(-10px,-8px,0); }\n  }\n\n  /* positions: scattered across full hero, including left/center-top, some off-edge */\n  .b1 { --r:-3deg;  top:6%;     left:-30px;  max-width:220px; animation:floatA 9s ease-in-out infinite; animation-delay:-1.2s; }\n  .b2 { --r:2deg;   top:11%;    left:22%;    max-width:180px; animation:floatB 11s ease-in-out infinite; animation-delay:-3.4s; }\n  .b3 { --r:-4deg;  top:4%;     left:46%;    max-width:240px; animation:floatC 10s ease-in-out infinite; animation-delay:-0.6s; }\n  .b4 { --r:3deg;   top:16%;    left:68%;    max-width:200px; animation:floatA 12s ease-in-out infinite; animation-delay:-5.1s; }\n  .b5 { --r:5deg;   top:20%;    right:-40px; max-width:240px; animation:floatB 9s  ease-in-out infinite; animation-delay:-2.3s; }\n  .b6 { --r:-2deg;  top:34%;    left:3%;     max-width:220px; animation:floatC 13s ease-in-out infinite; animation-delay:-4.0s; }\n  .b7 { --r:4deg;   top:38%;    left:30%;    max-width:280px; animation:floatA 10s ease-in-out infinite; animation-delay:-6.5s; }\n  .b8 { --r:-3deg;  top:42%;    right:16%;   max-width:260px; animation:floatB 12s ease-in-out infinite; animation-delay:-0.9s; }\n  .b9 { --r:2deg;   top:48%;    right:-30px; max-width:200px; animation:floatC 11s ease-in-out infinite; animation-delay:-7.2s; }\n  .b10{ --r:-5deg;  bottom:22%; left:-25px;  max-width:200px; animation:floatA 13s ease-in-out infinite; animation-delay:-2.8s; }\n  .b11{ --r:3deg;   bottom:14%; left:20%;    max-width:240px; animation:floatB 10s ease-in-out infinite; animation-delay:-4.6s; }\n  .b12{ --r:-2deg;  bottom:6%;  left:46%;    max-width:220px; animation:floatC 9s  ease-in-out infinite; animation-delay:-1.7s; }\n  .b13{ --r:4deg;   bottom:20%; right:14%;   max-width:240px; animation:floatA 11s ease-in-out infinite; animation-delay:-3.9s; }\n  .b14{ --r:-3deg;  bottom:4%;  right:-20px; max-width:180px; animation:floatB 12s ease-in-out infinite; animation-delay:-5.8s; }\n\n  /* warm wash overlay so text reads crisp */\n  .hero::after{\n    content:\"\";\n    position:absolute;\n    inset:0;\n    background:\n      linear-gradient(95deg, rgba(251,244,232,.96) 0%, rgba(251,244,232,.7) 40%, rgba(251,244,232,.2) 75%, rgba(251,244,232,0) 100%);\n    z-index:2;\n    pointer-events:none;\n  }\n  .hero-inner{\n    position:relative;\n    z-index:3;\n    max-width:720px;\n  }\n\n  .eyebrow{\n    display:inline-flex;\n    align-items:center;\n    gap:8px;\n    padding:7px 14px 7px 10px;\n    background:#fff;\n    border:1px solid var(--border);\n    border-radius:999px;\n    font-size:12px;\n    font-weight:500;\n    letter-spacing:0.08em;\n    text-transform:uppercase;\n    color:var(--ink-2);\n    margin-bottom:28px;\n  }\n  .live-dot{\n    width:8px;height:8px;border-radius:50%;\n    background:#2DD36F;\n    box-shadow:0 0 0 0 rgba(45,211,111,.6);\n    animation:pulse 1.8s ease-out infinite;\n  }\n  @keyframes pulse{\n    0%{box-shadow:0 0 0 0 rgba(45,211,111,.55)}\n    70%{box-shadow:0 0 0 8px rgba(45,211,111,0)}\n    100%{box-shadow:0 0 0 0 rgba(45,211,111,0)}\n  }\n\n  h1.hero-h{\n    font-family:var(--serif);\n    font-weight:400;\n    font-size:64px;\n    line-height:1.08;\n    letter-spacing:-0.015em;\n    margin:0 0 28px;\n    color:var(--ink);\n    text-wrap:balance;\n  }\n  h1.hero-h em{\n    font-style:italic;\n    font-weight:500;\n    color:var(--terra);\n  }\n  .hero-sub{\n    font-size:20px;\n    line-height:1.55;\n    color:var(--ink-2);\n    max-width:560px;\n    margin:0 0 40px;\n  }\n  .micro{\n    font-size:14px;\n    color:var(--muted);\n    margin:18px 0 0;\n  }\n\n  /* âââââââââ CTA button âââââââââ */\n  .btn{\n    display:inline-flex;\n    align-items:center;\n    gap:12px;\n    background:var(--terra);\n    color:#fff;\n    font-family:var(--sans);\n    font-size:18px;\n    font-weight:500;\n    letter-spacing:0.04em;\n    padding:20px 36px;\n    border-radius:10px;\n    border:0;\n    cursor:pointer;\n    transition:transform .18s ease, background .18s ease;\n    white-space:nowrap;\n  }\n  .btn:hover{\n    transform:translateY(-2px);\n    background:var(--terra-d);\n  }\n  .btn .arrow{\n    display:inline-block;\n    transition:transform .18s ease;\n  }\n  .btn:hover .arrow{transform:translateX(4px)}\n\n  /* ââ CTA row: button + QR card ââ */\n  .cta-row{\n    display:flex;\n    align-items:center;\n    gap:20px;\n    flex-wrap:wrap;\n  }\n  .qr-card{\n    display:flex;\n    align-items:center;\n    gap:14px;\n    background:#fff;\n    border:1px solid var(--border);\n    border-radius:14px;\n    padding:10px 16px 10px 10px;\n  }\n  .qr-card img{\n    width:78px;\n    height:78px;\n    display:block;\n    border-radius:6px;\n  }\n  .qr-label{\n    font-size:13px;\n    line-height:1.35;\n    color:var(--ink-2);\n    max-width:140px;\n  }\n  .qr-label strong{\n    display:block;\n    color:var(--ink);\n    font-weight:600;\n    font-size:14px;\n    margin-bottom:2px;\n  }\n  .qr-handle{\n    font-family:var(--mono);\n    font-size:12px;\n    color:var(--gold);\n  }\n  .final-cta{ display:flex; flex-direction:column; align-items:center; }\n  .final-cta .cta-row{ justify-content:center; }\n  @media (max-width:560px){\n    .qr-card{display:none}\n  }\n\n  /* âââââââââ Sections âââââââââ */\n  section{padding:var(--pad-y) 0}\n  .sec{position:relative}\n  .sec-h{\n    font-family:var(--serif);\n    font-weight:400;\n    font-size:44px;\n    line-height:1.15;\n    text-align:center;\n    margin:0 0 16px;\n    letter-spacing:-0.01em;\n    color:var(--ink);\n  }\n  .sec-h em{\n    font-style:italic;\n    font-weight:500;\n    color:var(--terra);\n  }\n  .sec-sub{\n    text-align:center;\n    font-size:17px;\n    color:var(--ink-2);\n    max-width:560px;\n    margin:0 auto 64px;\n    line-height:1.55;\n  }\n\n  /* âââââââââ Benefits grid âââââââââ */\n  .grid{\n    display:grid;\n    grid-template-columns:repeat(5, 1fr);\n    gap:14px;\n  }\n  .card{\n    background:var(--card);\n    border:1px solid var(--border);\n    border-radius:14px;\n    padding:30px 26px;\n    display:flex;\n    flex-direction:column;\n    gap:18px;\n    transition:transform .25s ease, border-color .25s ease;\n  }\n  .card:hover{\n    transform:translateY(-4px);\n    border-color:var(--rose);\n  }\n  .card .icon-wrap{\n    width:44px;height:44px;\n    border-radius:12px;\n    background:var(--bg-soft);\n    display:flex;align-items:center;justify-content:center;\n    color:var(--terra);\n  }\n  .card .icon-wrap svg{width:22px;height:22px;display:block}\n  .card h3{\n    font-family:var(--sans);\n    font-weight:600;\n    font-size:17px;\n    line-height:1.3;\n    margin:0;\n    color:var(--ink);\n  }\n  .card p{\n    font-size:14.5px;\n    line-height:1.6;\n    color:var(--ink-2);\n    margin:0;\n  }\n\n  /* âââââââââ Chat mock (Section 3) âââââââââ */\n  .chat-wrap{\n    position:relative;\n    max-width:440px;\n    margin:0 auto;\n  }\n  /* warm halo behind the phone */\n  .chat-wrap::before{\n    content:\"\";\n    position:absolute;\n    inset:-40px -60px;\n    background:radial-gradient(closest-side, rgba(232,155,142,.35), transparent 70%);\n    z-index:0;\n    border-radius:50%;\n  }\n  .chat{\n    position:relative;\n    z-index:1;\n    background:#FAFAFA;\n    border-radius:28px;\n    overflow:hidden;\n    border:1px solid var(--border);\n  }\n  .chat-head{\n    display:flex;align-items:center;gap:12px;\n    padding:16px 18px;\n    background:#fff;\n    border-bottom:1px solid #ECECEC;\n  }\n  .avatar{\n    width:38px;height:38px;border-radius:50%;\n    background:radial-gradient(circle at 30% 30%, #E8C898 0%, #B08D57 55%, #7E5F33 100%);\n    flex-shrink:0;\n  }\n  .chat-name{\n    font-size:14px;font-weight:600;color:var(--ink);\n    line-height:1.2;\n  }\n  .chat-status{\n    display:flex;align-items:center;gap:6px;\n    font-size:12px;color:var(--muted);\n    margin-top:2px;\n  }\n  .dot-active{\n    width:7px;height:7px;border-radius:50%;\n    background:#2DD36F;\n    display:inline-block;\n  }\n  .chat-body{\n    padding:18px 14px 22px;\n    display:flex;flex-direction:column;gap:8px;\n  }\n  .msg{\n    max-width:80%;\n    padding:10px 14px;\n    font-size:14px;\n    line-height:1.45;\n    border-radius:18px;\n    word-wrap:break-word;\n  }\n  .msg.bot{\n    align-self:flex-start;\n    background:#fff;\n    color:var(--ink);\n    border:1px solid #EFEFEF;\n    border-bottom-left-radius:6px;\n  }\n  .msg.client{\n    align-self:flex-end;\n    background:linear-gradient(135deg, #F58EA7 0%, #C66EE0 50%, #8E5BE0 100%);\n    color:#fff;\n    border-bottom-right-radius:6px;\n  }\n\n  .final-cta{\n    text-align:center;\n    margin-top:72px;\n  }\n  .final-cta .reassure{\n    display:block;\n    margin-top:14px;\n    font-size:14px;\n    color:var(--muted);\n  }\n\n  /* âââââââââ Footer âââââââââ */\n  footer{\n    border-top:1px solid var(--border);\n  }\n  .foot{\n    display:flex;align-items:center;justify-content:space-between;\n    min-height:60px;\n    padding:18px 32px;\n    max-width:var(--maxw);\n    margin:0 auto;\n    font-size:14px;\n    color:var(--ink-2);\n  }\n  .foot .brand{\n    font-family:var(--serif);\n    font-size:17px;\n    color:var(--ink);\n    letter-spacing:0.01em;\n  }\n\n  /* âââââââââ Responsive âââââââââ */\n  @media (max-width: 900px){\n    :root{--pad-y:72px}\n    .topbar{inset:20px 0 auto 0}\n    .wrap{padding:0 20px}\n    .hero{padding:120px 0 64px; min-height:auto}\n    h1.hero-h{font-size:40px}\n    .hero-sub{font-size:17px;margin-bottom:32px}\n    .sec-h{font-size:30px}\n    .sec-sub{font-size:15px;margin-bottom:40px}\n    .grid{grid-template-columns:1fr;gap:12px}\n    .card{padding:24px}\n    .btn{font-size:16px;padding:18px 30px}\n    .chat-wrap{max-width:100%}\n    .foot{flex-direction:column;gap:8px;text-align:center;padding:20px}\n    .final-cta{margin-top:56px}\n    /* hide some background bubbles on mobile to keep it light */\n    .b3,.b6{display:none}\n    .bg-bubble{max-width:200px;font-size:12.5px}\n    .b1{top:8%;right:-30px;max-width:170px}\n    .b2{top:18%;right:8%;max-width:180px}\n    .b4{bottom:14%;left:-20px;max-width:170px}\n    .b5{bottom:4%;left:8%;max-width:190px}\n  }\n<\u002Fstyle>\n<\u002Fhead>\n<body>\n\n  <!-- Top bar -->\n  <div class=\"topbar\">\n    <div class=\"wrap\">\n      <div class=\"wordmark\">MANEVISION<\u002Fdiv>\n      <nav class=\"lang\" aria-label=\"Language\">\n        <button data-lang=\"pl\" class=\"is-active\">PL<\u002Fbutton>\n        <button data-lang=\"en\">EN<\u002Fbutton>\n        <button data-lang=\"ru\">RU<\u002Fbutton>\n      <\u002Fnav>\n    <\u002Fdiv>\n  <\u002Fdiv>\n\n  <!-- âââââââââ Hero âââââââââ -->\n  <section class=\"hero\">\n\n    <!-- Decorative chat fragments in the background -->\n    <div class=\"bg-chat\" aria-hidden=\"true\">\n      <div class=\"bg-bubble cli b1\">ÑÐºÐ¾Ð»ÑÐºÐ¾ Ð±Ð¾ÑÐ¾ÐºÑ?<\u002Fdiv>\n      <div class=\"bg-bubble bot b2\">1 Ð·Ð¾Ð½Ð° â 350 zÅ, 2 Ð·Ð¾Ð½Ñ â 550 zÅ.<\u002Fdiv>\n      <div class=\"bg-bubble cli b3\">Ð§ÑÐ¾ Ð¿Ð¾ÑÐ¾Ð²ÐµÑÑÐµÑÐµ Ð´Ð»Ñ 30 Ð»ÐµÑ?<\u002Fdiv>\n      <div class=\"bg-bubble cli b4\">ÑÐ»Ð¾ÑÑ Ð² Ð¿ÑÑÐ½Ð¸ÑÑ?<\u002Fdiv>\n      <div class=\"bg-bubble bot b5\">ÐÑÑÐ½Ð¸ÑÐ°: 14:00, 16:30, 18:00. ÐÐ°ÐºÐ¾Ð¹ Ð±ÑÐ¾Ð½Ð¸ÑÑÐµÐ¼?<\u002Fdiv>\n      <div class=\"bg-bubble cli b6\">Ð° Ð¿ÑÐ¸ Ð±ÐµÑÐµÐ¼ÐµÐ½Ð½Ð¾ÑÑÐ¸ Ð¼Ð¾Ð¶Ð½Ð¾?<\u002Fdiv>\n      <div class=\"bg-bubble cli b7\">ÐÐ¾ÑÐµÑÑ ÑÐ¿ÑÑÐ³Ð¾ÑÑÐ¸<\u002Fdiv>\n      <div class=\"bg-bubble bot b8\">ÐÑÐ¸ Ð±ÐµÑÐµÐ¼ÐµÐ½Ð½Ð¾ÑÑÐ¸ Ð½Ðµ Ð´ÐµÐ»Ð°ÐµÐ¼ â Ð¿ÑÐ°Ð²Ð¸Ð»Ð¾ Ð±ÐµÐ·Ð¾Ð¿Ð°ÑÐ½Ð¾ÑÑÐ¸.<\u002Fdiv>\n      <div class=\"bg-bubble cli b9\">ÐÐ° ÑÑÐ¾Ð¹ Ð½ÐµÐ´ÐµÐ»Ðµ<\u002Fdiv>\n      <div class=\"bg-bubble cli b10\">Ð¥Ð¾ÑÑ ÐºÐµÑÐ°ÑÐ¸Ð½<\u002Fdiv>\n      <div class=\"bg-bubble bot b11\">ÐÐ¾Ð½ÑÐ»Ð°, ÐºÑÑÑ.<\u002Fdiv>\n      <div class=\"bg-bubble cli b12\">Ð¡ÑÐµÐ´Ð° Ð¸Ð»Ð¸ Ð¿ÑÑÐ½Ð¸ÑÐ°<\u002Fdiv>\n      <div class=\"bg-bubble cli b13\">17-19<\u002Fdiv>\n      <div class=\"bg-bubble cli b14\">ÐÐ° Ð²ÐµÑÐµÑ<\u002Fdiv>\n    <\u002Fdiv>\n\n    <div class=\"wrap\">\n      <div class=\"hero-inner\">\n        <span class=\"eyebrow\"><span class=\"live-dot\"><\u002Fspan><span data-i18n=\"eyebrow\"><\u002Fspan><\u002Fspan>\n        <h1 class=\"hero-h\" data-i18n=\"hero_h\"><\u002Fh1>\n        <p class=\"hero-sub\" data-i18n=\"hero_sub\">ÐÐ°ÑÐ° ÐºÐ»Ð¸Ð½Ð¸ÐºÐ° Ð¾ÑÐ²ÐµÑÐ°ÐµÑ Ð·Ð° 10 ÑÐµÐºÑÐ½Ð´. Ð Ð»ÑÐ±Ð¾Ðµ Ð²ÑÐµÐ¼Ñ. Ð Ð»ÑÐ±Ð¾Ð¼ Ð¼ÐµÑÑÐµÐ½Ð´Ð¶ÐµÑÐµ. Ð Ð»ÑÐ±Ð¾Ð¹ ÑÐ¾ÑÑÐµÑÐ¸.<\u002Fp>\n        <div class=\"cta-row\">\n          <a class=\"btn\" href=\"https://ig.me/m/manebotdemo_beauty\" target=\"_blank\" rel=\"noopener noreferrer\">\n            <span data-i18n=\"cta_hero\"><\u002Fspan><span class=\"arrow\">â<\u002Fspan>\n          <\u002Fa>\n          <div class=\"qr-card\" aria-hidden=\"true\">\n            <img src=\"113ac4c5-97e2-4ee2-b83f-885445013665\" alt=\"\">\n            <div class=\"qr-label\">\n              <strong data-i18n=\"qr_title\"><\u002Fstrong>\n              <span data-i18n=\"qr_sub\"><\u002Fspan>\n            <\u002Fdiv>\n          <\u002Fdiv>\n        <\u002Fdiv>\n        <p class=\"micro\" data-i18n=\"micro\"><\u002Fp>\n      <\u002Fdiv>\n    <\u002Fdiv>\n  <\u002Fsection>\n\n  <!-- âââââââââ Benefits âââââââââ -->\n  <section class=\"sec\">\n    <div class=\"wrap\">\n      <h2 class=\"sec-h\" data-i18n=\"sec_benefits\"><\u002Fh2>\n      <p class=\"sec-sub\" data-i18n=\"sec_benefits_sub\"><\u002Fp>\n      <div class=\"grid\">\n\n        <article class=\"card\">\n          <span class=\"icon-wrap\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"><\u002Fpath><\u002Fsvg><\u002Fspan>\n          <h3 data-i18n=\"c1h\"><\u002Fh3>\n          <p data-i18n=\"c1b\"><\u002Fp>\n        <\u002Farticle>\n\n        <article class=\"card\">\n          <span class=\"icon-wrap\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6\"><\u002Fpath><\u002Fsvg><\u002Fspan>\n          <h3 data-i18n=\"c2h\"><\u002Fh3>\n          <p data-i18n=\"c2b\"><\u002Fp>\n        <\u002Farticle>\n\n        <article class=\"card\">\n          <span class=\"icon-wrap\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"><\u002Fpath><polyline points=\"9 12 11 14 15 10\"><\u002Fpolyline><\u002Fsvg><\u002Fspan>\n          <h3 data-i18n=\"c3h\"><\u002Fh3>\n          <p data-i18n=\"c3b\"><\u002Fp>\n        <\u002Farticle>\n\n        <article class=\"card\">\n          <span class=\"icon-wrap\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"><\u002Frect><line x1=\"16\" y1=\"2\" x2=\"16\" y2=\"6\"><\u002Fline><line x1=\"8\" y1=\"2\" x2=\"8\" y2=\"6\"><\u002Fline><line x1=\"3\" y1=\"10\" x2=\"21\" y2=\"10\"><\u002Fline><polyline points=\"9 16 11 18 15 14\"><\u002Fpolyline><\u002Fsvg><\u002Fspan>\n          <h3 data-i18n=\"c4h\"><\u002Fh3>\n          <p data-i18n=\"c4b\"><\u002Fp>\n        <\u002Farticle>\n\n        <article class=\"card\">\n          <span class=\"icon-wrap\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z\"><\u002Fpath><\u002Fsvg><\u002Fspan>\n          <h3 data-i18n=\"c5h\"><\u002Fh3>\n          <p data-i18n=\"c5b\"><\u002Fp>\n        <\u002Farticle>\n\n      <\u002Fdiv>\n    <\u002Fdiv>\n  <\u002Fsection>\n\n  <!-- âââââââââ Live dialogue + final CTA âââââââââ -->\n  <section class=\"sec\" style=\"background:linear-gradient(180deg, transparent, rgba(245,230,211,.4) 40%, transparent);\">\n    <div class=\"wrap\">\n      <h2 class=\"sec-h\" data-i18n=\"sec_chat\"><\u002Fh2>\n      <p class=\"sec-sub\" data-i18n=\"sec_chat_sub\"><\u002Fp>\n\n      <div class=\"chat-wrap\">\n        <div class=\"chat\" role=\"img\" aria-label=\"Instagram chat preview\">\n          <div class=\"chat-head\">\n            <div class=\"avatar\" aria-hidden=\"true\"><\u002Fdiv>\n            <div>\n              <div class=\"chat-name\">@manebotdemo_beauty<\u002Fdiv>\n              <div class=\"chat-status\"><span class=\"dot-active\"><\u002Fspan><span data-i18n=\"active_now\"><\u002Fspan><\u002Fdiv>\n            <\u002Fdiv>\n          <\u002Fdiv>\n          <div class=\"chat-body\">\n            <div class=\"msg client\" data-i18n=\"m1\"><\u002Fdiv>\n            <div class=\"msg bot\" data-i18n=\"m2\"><\u002Fdiv>\n            <div class=\"msg client\" data-i18n=\"m3\"><\u002Fdiv>\n            <div class=\"msg bot\" data-i18n=\"m4\"><\u002Fdiv>\n            <div class=\"msg client\" data-i18n=\"m5\"><\u002Fdiv>\n            <div class=\"msg bot\" data-i18n=\"m6\"><\u002Fdiv>\n          <\u002Fdiv>\n        <\u002Fdiv>\n      <\u002Fdiv>\n\n      <div class=\"final-cta\">\n        <div class=\"cta-row\">\n          <a class=\"btn\" href=\"https://ig.me/m/manebotdemo_beauty\" target=\"_blank\" rel=\"noopener noreferrer\">\n            <span data-i18n=\"cta_final\"><\u002Fspan><span class=\"arrow\">â<\u002Fspan>\n          <\u002Fa>\n          <div class=\"qr-card\" aria-hidden=\"true\">\n            <img src=\"113ac4c5-97e2-4ee2-b83f-885445013665\" alt=\"\">\n            <div class=\"qr-label\">\n              <strong data-i18n=\"qr_title\"><\u002Fstrong>\n              <span data-i18n=\"qr_sub\"><\u002Fspan>\n            <\u002Fdiv>\n          <\u002Fdiv>\n        <\u002Fdiv>\n        <span class=\"reassure\" data-i18n=\"reassure\"><\u002Fspan>\n      <\u002Fdiv>\n    <\u002Fdiv>\n  <\u002Fsection>\n\n  <!-- âââââââââ Footer âââââââââ -->\n  <footer>\n    <div class=\"foot\">\n      <div class=\"brand\">Manevision<\u002Fdiv>\n      <div>office@manebot.com&nbsp;&nbsp;Â·&nbsp;&nbsp;+48 732 228 810<\u002Fdiv>\n    <\u002Fdiv>\n  <\u002Ffooter>\n\n<script>\n  const i18n = {\n    pl: {\n      eyebrow:   \"Demo live Â· Instagram\",\n      hero_h:    \"KaÅ¼da nieodebrana wiadomoÅÄ â to klientka, <em>ktÃ³ra nie wrÃ³ci.<\u002Fem>\",\n      hero_sub:  \"Wasza klinika odpowiada w 10 sekund. O kaÅ¼dej porze. W aplikacji, w ktÃ³rej klientka i tak juÅ¼ tam siedzi.\",\n      cta_hero:  \"Napisz do bota teraz\",\n      micro:     \"2 minuty. Bez rejestracji. Pisz, co chcesz.\",\n\n      sec_benefits:     \"Gdzie tracicie klientki\",\n      sec_benefits_sub: \"PiÄÄ momentÃ³w, w ktÃ³rych codziennie tracicie klientki â i jak bot je zamyka.\",\n      c1h: \"Koniec z ciszÄ o 23:00\",\n      c1b: \"Pyta o cenÄ w nocy. Dostaje odpowiedÅº w 10 sekund. Rezerwuje â zanim konkurencja w ogÃ³le siÄ obudzi.\",\n      c2h: \"Ceny dokÅadne, nie Â«mniej wiÄcejÂ»\",\n      c2b: \"35+ zabiegÃ³w, promocje, pakiety. Klientka dostaje konkretnÄ cyfrÄ â bez âsprawdzÄ i oddzwoniÄâ.\",\n      c3h: \"Chroni przed ryzykiem\",\n      c3b: \"Pyta o ciÄÅ¼Ä, leki, alergie zanim w ogÃ³le zaproponuje termin. Wasza recepcja Åpi spokojnie.\",\n      c4h: \"Rezerwuje, gdy macie peÅen grafik\",\n      c4b: \"Wy robicie zabieg. Ona w tym czasie wybiera slot. Bez oddzwaniania, bez pingponga.\",\n      c5h: \"Tam, gdzie klientka juÅ¼ jest\",\n      c5b: \"Instagram, WhatsApp, strona. Bez aplikacji do pobrania, bez konta do zaÅoÅ¼enia.\",\n\n      sec_chat:     \"Tak <em>rozmawia<\u002Fem> z klientkÄ\",\n      sec_chat_sub: \"Prawdziwy fragment z dema. Po polsku, naturalnie, bez âjak mogÄ pomÃ³câ.\",\n      active_now: \"Aktywny teraz\",\n      m1: \"czeÅÄ, ile kosztuje botoks?\",\n      m2: \"Botoks 1 strefa â 350 zÅ, 2 strefy â 550 zÅ. Chcesz zapisaÄ siÄ czy najpierw porozmawiamy o procedurze?\",\n      m3: \"a w ciÄÅ¼y moÅ¼na?\",\n      m4: \"W ciÄÅ¼y botoksu nie robimy â to dla bezpieczeÅstwa mamy i dziecka. MogÄ zaproponowaÄ coÅ Åagodniejszego, np. zabiegi nawilÅ¼ajÄce?\",\n      m5: \"jakie macie wolne sloty w piÄtek?\",\n      m6: \"PiÄtek: 14:00, 16:30, 18:00. KtÃ³ry rezerwujemy?\",\n      cta_final: \"SprÃ³buj sama na Instagram\",\n      reassure:  \"Bot odpisuje od razu. Nie czekacie na nic.\",\n      qr_title: \"Zeskanuj\",\n      qr_sub:   \"i napisz do bota\",\n\n      bg1: \"ile kosztuje botoks?\",\n      bg2: \"Botoks 1 strefa â 350 zÅ, 2 strefy â 550 zÅ.\",\n      bg3: \"a w ciÄÅ¼y moÅ¼na?\",\n      bg4: \"W ciÄÅ¼y nie robimy â to nasza zasada bezpieczeÅstwa.\",\n      bg5: \"jakie sloty w piÄtek?\",\n      bg6: \"PiÄtek: 14:00, 16:30, 18:00.\"\n    },\n    en: {\n      eyebrow:   \"Live demo Â· Instagram\",\n      hero_h:    \"Every unanswered message is a client <em>who won't come back.<\u002Fem>\",\n      hero_sub:  \"Your clinic replies in 10 seconds. Any hour. Right inside the app she's already scrolling.\",\n      cta_hero:  \"Message the bot now\",\n      micro:     \"2 minutes. No signup. Ask anything.\",\n\n      sec_benefits:     \"What it actually fixes\",\n      sec_benefits_sub: \"Five things quietly costing you clients every day â and how the bot closes each one.\",\n      c1h: \"No more midnight silence\",\n      c1b: \"She asks about price at 11 PM. Gets a reply in 10 seconds. Books â before your competitor wakes up.\",\n      c2h: \"Exact prices, never Â«aroundÂ»\",\n      c2b: \"35+ services, promos, packages. She gets the exact number â no Â«aroundÂ», no Â«let me checkÂ».\",\n      c3h: \"Catches risky bookings\",\n      c3b: \"Asks about pregnancy, meds, allergies before offering a slot.\",\n      c4h: \"Books while you're with another client\",\n      c4b: \"You're doing a treatment. She's picking a time. No callbacks, no back-and-forth.\",\n      c5h: \"Right in her messengers\",\n      c5b: \"Instagram, WhatsApp, your site. No app to download, no account to create.\",\n\n      sec_chat:     \"How it <em>actually<\u002Fem> talks\",\n      sec_chat_sub: \"Real cut from the demo. Natural â none of that \\\"how may I assist you\\\" stuff.\",\n      active_now: \"Active now\",\n      m1: \"hi, how much is botox?\",\n      m2: \"Botox 1 zone â 350 zÅ, 2 zones â 550 zÅ. Want to book or talk through the procedure first?\",\n      m3: \"can I get it while pregnant?\",\n      m4: \"We don't do botox during pregnancy â that's our safety rule for mom and baby. I can suggest something gentler, like hydration treatments?\",\n      m5: \"any free slots on Friday?\",\n      m6: \"Friday: 2 PM, 4:30 PM, 6 PM. Which one do we book?\",\n      cta_final: \"Try it yourself on Instagram\",\n      reassure:  \"Bot replies instantly. You're not waiting on anything.\",\n      qr_title: \"Scan\",\n      qr_sub:   \"to message the bot\",\n\n      bg1: \"hi, how much is botox?\",\n      bg2: \"1 zone â 350 zÅ, 2 zones â 550 zÅ.\",\n      bg3: \"can I get it while pregnant?\",\n      bg4: \"We don't during pregnancy â safety rule.\",\n      bg5: \"free slots Friday?\",\n      bg6: \"Friday: 2 PM, 4:30 PM, 6 PM.\"\n    },\n    ru: {\n      eyebrow:   \"ÐÐµÐ¼Ð¾ Ð² ÑÑÐ¸ÑÐµ Â· Instagram\",\n      hero_h:    \"ÐÐ°Ð¶Ð´Ð¾Ðµ Ð¿ÑÐ¾Ð¿ÑÑÐµÐ½Ð½Ð¾Ðµ ÑÐ¾Ð¾Ð±ÑÐµÐ½Ð¸Ðµ â ÐºÐ»Ð¸ÐµÐ½Ñ, <em>ÐºÐ¾ÑÐ¾ÑÑÐ¹ Ð½Ðµ Ð²ÐµÑÐ½ÑÑÑÑ.<\u002Fem>\",\n      hero_sub:  \"ÐÐ°ÑÐ° ÐºÐ»Ð¸Ð½Ð¸ÐºÐ° Ð¾ÑÐ²ÐµÑÐ°ÐµÑ Ð·Ð° 10 ÑÐµÐºÑÐ½Ð´. Ð Ð»ÑÐ±Ð¾Ðµ Ð²ÑÐµÐ¼Ñ. Ð Ð»ÑÐ±Ð¾Ð¼ Ð¼ÐµÑÑÐµÐ½Ð´Ð¶ÐµÑÐµ. Ð Ð»ÑÐ±Ð¾Ð¹ ÑÐ¾ÑÑÐµÑÐ¸.\",\n      cta_hero:  \"ÐÐ°Ð¿Ð¸ÑÐ°ÑÑ Ð±Ð¾ÑÑ ÑÐµÐ¹ÑÐ°Ñ\",\n      micro:     \"2 Ð¼Ð¸Ð½ÑÑÑ. ÐÐµÐ· ÑÐµÐ³Ð¸ÑÑÑÐ°ÑÐ¸Ð¸. Ð¡Ð¿ÑÐ°ÑÐ¸Ð²Ð°Ð¹ÑÐµ ÑÑÐ¾ ÑÐ³Ð¾Ð´Ð½Ð¾.\",\n\n      sec_benefits:     \"ÐÑÑÑ Ð¿ÑÐ¸ÑÐ¸Ð½ Ð¿Ð¾ÑÐµÑÑÑÑ ÐºÐ»Ð¸ÐµÐ½ÑÐ°\",\n      sec_benefits_sub: \"Ð¢Ð¸ÑÐ¸Ð½Ð°, Ð¼ÐµÐ´Ð»ÐµÐ½Ð½ÑÐµ Ð¾ÑÐ²ÐµÑÑ, Ð·Ð°Ð±ÑÑÑÐµ ÑÐ¾Ð¾Ð±ÑÐµÐ½Ð¸Ñ. ÐÐ¾Ñ Ð·Ð°ÐºÑÑÐ²Ð°ÐµÑ ÐºÐ°Ð¶Ð´ÑÑ.\",\n      c1h: \"ÐÐ¾Ð½ÐµÑ ÑÐ¸ÑÐ¸Ð½Ðµ Ð² 23:00\",\n      c1b: \"Ð¡Ð¿ÑÐ°ÑÐ¸Ð²Ð°ÐµÑ ÑÐµÐ½Ñ Ð½Ð¾ÑÑÑ. ÐÐ¾Ð»ÑÑÐ°ÐµÑ Ð¾ÑÐ²ÐµÑ Ð·Ð° 10 ÑÐµÐºÑÐ½Ð´. ÐÐ°Ð¿Ð¸ÑÑÐ²Ð°ÐµÑÑÑ â Ð¿Ð¾ÐºÐ° ÐºÐ¾Ð½ÐºÑÑÐµÐ½ÑÑ ÐµÑÑ ÑÐ¿ÑÑ.\",\n      c2h: \"Ð¦ÐµÐ½Ñ â ÑÐ¾ÑÐ½ÑÐµ, Ð½Ðµ Â«Ð¿ÑÐ¸Ð¼ÐµÑÐ½Ð¾Â»\",\n      c2b: \"100+ Ð¿ÑÐ¾ÑÐµÐ´ÑÑ, Ð°ÐºÑÐ¸Ð¸, Ð¿Ð°ÐºÐµÑÑ. ÐÐ»Ð¸ÐµÐ½Ñ Ð¿Ð¾Ð»ÑÑÐ°ÐµÑ ÑÐ¾ÑÐ½ÑÑ ÑÐ¸ÑÑÑ â Ð±ÐµÐ· Â«ÑÑÐ¾ÑÐ½Ñ Ð¸ Ð¿ÐµÑÐµÐ·Ð²Ð¾Ð½ÑÂ».\",\n      c3h: \"ÐÑÑÐ°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÑ ÑÐ¸ÑÐº Ð´Ð¾ Ð·Ð°Ð¿Ð¸ÑÐ¸\",\n      c3b: \"Ð¡Ð¿ÑÐ°ÑÐ¸Ð²Ð°ÐµÑ Ð¿ÑÐ¾ Ð±ÐµÑÐµÐ¼ÐµÐ½Ð½Ð¾ÑÑÑ, Ð»ÐµÐºÐ°ÑÑÑÐ²Ð°, Ð°Ð»Ð»ÐµÑÐ³Ð¸Ð¸ â Ð´Ð¾ ÑÐ¾Ð³Ð¾, ÐºÐ°Ðº Ð¿ÑÐµÐ´Ð»Ð¾Ð¶Ð¸ÑÑ ÑÐ»Ð¾Ñ.\",\n      c4h: \"ÐÐ°Ð¿Ð¸ÑÑÐ²Ð°ÐµÑ, Ð¿Ð¾ÐºÐ° Ð²Ñ ÑÐ°Ð±Ð¾ÑÐ°ÐµÑÐµ\",\n      c4b: \"ÐÑ â Ð½Ð° Ð¿ÑÐ¾ÑÐµÐ´ÑÑÐµ. ÐÐ½Ð° â Ð²ÑÐ±Ð¸ÑÐ°ÐµÑ Ð²ÑÐµÐ¼Ñ. ÐÐµÐ· Ð¿ÐµÑÐµÐ·Ð²Ð¾Ð½Ð¾Ð² Ð¸ Ð¿ÐµÑÐµÐ¿Ð¸ÑÐ¾Ðº ÑÑÐ´Ð°-ÑÑÐ´Ð°.\",\n      c5h: \"Ð¢Ð°Ð¼, Ð³Ð´Ðµ ÐºÐ»Ð¸ÐµÐ½Ñ ÑÐ¶Ðµ ÐµÑÑÑ\",\n      c5b: \"Instagram, WhatsApp, ÑÐ°Ð¹Ñ. ÐÐ¸ÑÐµÐ³Ð¾ Ð½Ðµ ÐºÐ°ÑÐ°ÑÑ, Ð½Ð¸Ð³Ð´Ðµ Ð½Ðµ ÑÐµÐ³Ð¸ÑÑÑÐ¸ÑÐ¾Ð²Ð°ÑÑÑÑ.\",\n\n      sec_chat:     \"ÐÐ¾Ñ ÐºÐ°Ðº Ð¾Ð½ <em>ÑÐµÐ°Ð»ÑÐ½Ð¾<\u002Fem> Ð¾Ð±ÑÐ°ÐµÑÑÑ\",\n      sec_chat_sub: \"ÐÐ¸Ð²Ð¾Ð¹ ÐºÑÑÐ¾Ðº Ð¸Ð· Ð´ÐµÐ¼Ð¾. ÐÑÑÐµÑÑÐ²ÐµÐ½Ð½Ð¾ â Ð±ÐµÐ· Â«ÑÐµÐ¼ Ð¼Ð¾Ð³Ñ Ð±ÑÑÑ Ð¿Ð¾Ð»ÐµÐ·ÐµÐ½Â».\",\n      active_now: \"Ð ÑÐµÑÐ¸\",\n      m1: \"Ð¿ÑÐ¸Ð²ÐµÑ, ÑÐºÐ¾Ð»ÑÐºÐ¾ Ð±Ð¾ÑÐ¾ÐºÑ?\",\n      m2: \"ÐÐ¾ÑÐ¾ÐºÑ 1 Ð·Ð¾Ð½Ð° â 350 zÅ, 2 Ð·Ð¾Ð½Ñ â 550 zÅ. ÐÐ°Ð¿Ð¸ÑÐµÐ¼ÑÑ Ð¸Ð»Ð¸ ÑÐ½Ð°ÑÐ°Ð»Ð° ÑÐ°ÑÑÐºÐ°Ð¶Ñ Ð¿ÑÐ¾ Ð¿ÑÐ¾ÑÐµÐ´ÑÑÑ?\",\n      m3: \"Ð° Ð¿ÑÐ¸ Ð±ÐµÑÐµÐ¼ÐµÐ½Ð½Ð¾ÑÑÐ¸ Ð¼Ð¾Ð¶Ð½Ð¾?\",\n      m4: \"ÐÑÐ¸ Ð±ÐµÑÐµÐ¼ÐµÐ½Ð½Ð¾ÑÑÐ¸ Ð±Ð¾ÑÐ¾ÐºÑ Ð½Ðµ Ð´ÐµÐ»Ð°ÐµÐ¼ â ÑÑÐ¾ Ð½Ð°ÑÐµ Ð¿ÑÐ°Ð²Ð¸Ð»Ð¾ Ð±ÐµÐ·Ð¾Ð¿Ð°ÑÐ½Ð¾ÑÑÐ¸. ÐÐ¾Ð³Ñ Ð¿ÑÐµÐ´Ð»Ð¾Ð¶Ð¸ÑÑ ÑÑÐ¾-ÑÐ¾ Ð¼ÑÐ³ÑÐµ, Ð½Ð°Ð¿ÑÐ¸Ð¼ÐµÑ ÑÐ²Ð»Ð°Ð¶Ð½ÑÑÑÐ¸Ðµ Ð¿ÑÐ¾ÑÐµÐ´ÑÑÑ?\",\n      m5: \"ÐºÐ°ÐºÐ¸Ðµ ÑÐ»Ð¾ÑÑ Ð² Ð¿ÑÑÐ½Ð¸ÑÑ?\",\n      m6: \"ÐÑÑÐ½Ð¸ÑÐ°: 14:00, 16:30, 18:00. ÐÐ°ÐºÐ¾Ð¹ Ð±ÑÐ¾Ð½Ð¸ÑÑÐµÐ¼?\",\n      cta_final: \"ÐÐ¾Ð¿ÑÐ¾Ð±ÑÐ¹ ÑÐ°Ð¼ Ð² Instagram\",\n      reassure:  \"ÐÐ¾Ñ Ð¾ÑÐ²ÐµÑÐ°ÐµÑ ÑÑÐ°Ð·Ñ. ÐÐ¸ÑÐµÐ³Ð¾ Ð¶Ð´Ð°ÑÑ Ð½Ðµ Ð½ÑÐ¶Ð½Ð¾.\",\n      qr_title: \"ÐÑÑÐºÐ°Ð½Ð¸ÑÑÐ¹\",\n      qr_sub:   \"Ð¸ Ð½Ð°Ð¿Ð¸ÑÐ¸ Ð±Ð¾ÑÑ\",\n\n      bg1: \"ÑÐºÐ¾Ð»ÑÐºÐ¾ Ð±Ð¾ÑÐ¾ÐºÑ?\",\n      bg2: \"1 Ð·Ð¾Ð½Ð° â 350 zÅ, 2 Ð·Ð¾Ð½Ñ â 550 zÅ.\",\n      bg3: \"Ð° Ð¿ÑÐ¸ Ð±ÐµÑÐµÐ¼ÐµÐ½Ð½Ð¾ÑÑÐ¸ Ð¼Ð¾Ð¶Ð½Ð¾?\",\n      bg4: \"ÐÑÐ¸ Ð±ÐµÑÐµÐ¼ÐµÐ½Ð½Ð¾ÑÑÐ¸ Ð½Ðµ Ð´ÐµÐ»Ð°ÐµÐ¼ â Ð¿ÑÐ°Ð²Ð¸Ð»Ð¾ Ð±ÐµÐ·Ð¾Ð¿Ð°ÑÐ½Ð¾ÑÑÐ¸.\",\n      bg5: \"ÑÐ»Ð¾ÑÑ Ð² Ð¿ÑÑÐ½Ð¸ÑÑ?\",\n      bg6: \"ÐÑÑÐ½Ð¸ÑÐ°: 14:00, 16:30, 18:00.\"\n    }\n  };\n\n  const htmlEl = document.documentElement;\n  const buttons = document.querySelectorAll('.lang button');\n\n  function setLang(lang){\n    if(!i18n[lang]) lang = 'pl';\n    const dict = i18n[lang];\n    document.querySelectorAll('[data-i18n]').forEach(el=>{\n      const k = el.getAttribute('data-i18n');\n      if(dict[k] !== undefined) el.innerHTML = dict[k]; // allow <em> in headings\n    });\n    buttons.forEach(b=>b.classList.toggle('is-active', b.dataset.lang===lang));\n    htmlEl.lang = lang;\n    try { localStorage.setItem('manevision_lang', lang); } catch(e){}\n  }\n\n  buttons.forEach(b=>b.addEventListener('click', ()=>setLang(b.dataset.lang)));\n\n  let initial = 'pl';\n  try {\n    const stored = localStorage.getItem('manevision_lang');\n    if(stored && i18n[stored]) initial = stored;\n  } catch(e){}\n  setLang(initial);\n<\u002Fscript>\n\n\n<\u002Fbody><\u002Fhtml>"
-  </script>
+  // ───── QR lightbox ─────
+  const qrModal   = document.getElementById('qrModal');
+  const qrTrigger = document.getElementById('qrTrigger');
+  const qrClose   = document.getElementById('qrClose');
+  function openQR(){
+    qrModal.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeQR(){
+    qrModal.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  qrTrigger.addEventListener('click', openQR);
+  qrClose.addEventListener('click', closeQR);
+  qrModal.addEventListener('click', (e)=>{ if(e.target === qrModal) closeQR(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && qrModal.classList.contains('is-open')) closeQR(); });
+</script>
 </body>
 </html>
